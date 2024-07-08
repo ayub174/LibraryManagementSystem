@@ -1,41 +1,47 @@
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 import services.LibraryService;
+import models.Book;
+
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ServiceTests {
+class ServiceTests {
 
     private LibraryService libraryService;
 
 
 
-    @Before
+
+    @BeforeEach
     public void setUp()
     {
-        libraryService = new LibraryService();
-
+        List<Book> books = new ArrayList<>();
+        libraryService = new LibraryService(books);
     }
 
 
 
     @Test
-    public void whenAddBookWithValidInput_thenNoExceptionThrown()
+    void whenAddBookWithValidInputThenNoExceptionThrown() throws Exception
     {
         try{
             //create new book
             libraryService.addBook("1234", "The Alchemist", "Paulo Coelho", false);
         }catch(Exception e)
         {
-            e.printStackTrace();
-            fail("Exception thrown");
+          throw new RuntimeException("Exception thrown");
         }
 
         //check if the book we created is equal to the book in the list
-        assertEquals("1234", libraryService.books.get(0).getIsbn());
-        assertEquals("The Alchemist", libraryService.books.get(0).getTitle());
-        assertEquals("Paulo Coelho", libraryService.books.get(0).getAuthor());
+        assertEquals(TestConstantsUtility.excpectedISBN, libraryService.books.get(0).getIsbn());
+        assertEquals(TestConstantsUtility.expectedTitle, libraryService.books.get(0).getTitle());
+        assertEquals(TestConstantsUtility.expectedAuthor, libraryService.books.get(0).getAuthor());
         assertFalse(libraryService.books.get(0).isBorrowed());
+
 
     }
 
