@@ -1,18 +1,20 @@
 package services;
 
 import models.Book;
+import models.User;
 
 import java.util.List;
 
-//Logic handler for library services
+//Service layer for LMS
 public class LibraryService {
 
 
     public List<Book> books;
+    public List<User> users;
 
-
-    public LibraryService(List<Book> books) {
+    public LibraryService(List<Book> books, List<User> users) {
         this.books = books;
+        this.users = users;
     }
 
 
@@ -46,16 +48,86 @@ public class LibraryService {
         }
     }
 
-    //Add member
+    //Add member: Admin should be able to add a member to the LMS. Without being a member, you cannot borrow any books.
+    public void addUser(User admin, String memberId, String name, boolean isAdmin) throws IllegalArgumentException
+    {
+        if(admin.isAdmin())
+        {
+            User user = new User(memberId, name, isAdmin);
+            users.add(user);
+        }else{
+            throw new IllegalArgumentException("You are not an admin.");
+        }
+
+    }
+
 
 
     //Remove member
 
 
-    //Borrow book
+    public void borrowBook(String memberId, String isbn)
+    {
+        //Vill kolla att boken inte är låand av någon annan
+        for(Book book : books)
+        {
+            if(book.getIsbn().equalsIgnoreCase(isbn) && !book.isBorrowed())
+            {
+                for(User user : users)
+                {
+                    if(user.getMemberId().equalsIgnoreCase(memberId))
+                    {
+                        user.getBorrowedBooks().add(book);
+                        book.setBorrowed(true);
+                    }
+                }
+            }
+        }
 
-
+    }
     //Return book
+    public void returnBook(String memberId, String isbn)
+    {
+
+        User user = findUserById(memberId);
+
+       if(user == null)
+       {
+           throw new IllegalArgumentException("User not found");
+       }
+
+       Book bookToReturn = null;
+
+        for(Book book : user.getBorrowedBooks())
+        {
+            if(book.getIsbn().equalsIgnoreCase(isbn))
+            {
+                book.setBorrowed(false);
+                bookToReturn = book;
+                break;
+            }
+        }
+
+        if(bookToReturn == null)
+        {
+            throw new IllegalArgumentException("Book not found");
+        }
+
+
+        bookToReturn.setBorrowed(false);
+        user.getBorrowedBooks().remove(bookToReturn);
+
+    }
+
+    private User findUserById(String memberId) {
+        User u = null;
+        for(User user : users)
+        {
+            if(user.getMemberId().equalsIgnoreCase(memberId));
+            u = new User(user.getMemberId(), user.getName(), user.isAdmin());
+        }
+        return u;
+    }
 
 
     //Show all books
@@ -67,7 +139,13 @@ public class LibraryService {
     }
 
     //Show all members
-
+    public void showAllMembers()
+    {
+        for(User u : users)
+        {
+            System.out.println(u.getName());
+        }
+    }
 
 
     public void checkIfBookExists(String isbn) throws Exception

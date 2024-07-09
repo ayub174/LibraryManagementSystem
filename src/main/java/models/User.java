@@ -8,7 +8,7 @@ public class User {
 
     private String memberId, name;
     List<Book> borrowedBooks;
-    private final boolean isAdmin;
+    private boolean isAdmin;
 
     public User(String memberId, String name, boolean isAdmin)
     {
@@ -40,6 +40,11 @@ public class User {
 
     public void setBorrowedBooks(List<Book> borrowedBooks) {
         this.borrowedBooks = borrowedBooks;
+    }
+
+   public void setAdmin(boolean isAdmin)
+    {
+        this.isAdmin = isAdmin;
     }
 
     public boolean isAdmin()
