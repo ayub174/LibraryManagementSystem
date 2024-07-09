@@ -1,18 +1,21 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Member {
+public class User {
 
 
     private String memberId, name;
     List<Book> borrowedBooks;
+    private final boolean isAdmin;
 
-
-    public Member(String memberId, String name)
+    public User(String memberId, String name, boolean isAdmin)
     {
         this.memberId = memberId;
         this.name = name;
+        this.borrowedBooks = new ArrayList<>();
+        this.isAdmin = isAdmin;
     }
 
     public String getMemberId() {
@@ -38,4 +41,11 @@ public class Member {
     public void setBorrowedBooks(List<Book> borrowedBooks) {
         this.borrowedBooks = borrowedBooks;
     }
+
+    public boolean isAdmin()
+    {
+        return isAdmin;
+    }
+
+
 }

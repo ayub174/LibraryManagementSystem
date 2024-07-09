@@ -15,7 +15,6 @@ class ServiceTests {
 
 
 
-
     @BeforeEach
     public void setUp()
     {
@@ -42,7 +41,27 @@ class ServiceTests {
         assertEquals(TestConstantsUtility.expectedAuthor, libraryService.books.get(0).getAuthor());
         assertFalse(libraryService.books.get(0).isBorrowed());
 
+    }
 
+
+    /*
+      1) Skapa en ny bok som du lägger till i listan
+      2) använd delete metoden för att ta bort boken
+      3) Verifiera att boken inte finns kvar.
+     */
+
+    @Test
+    public void deleteBookFromTheBookList()
+    {
+        try{
+            //create new book
+            libraryService.addBook("1234", "The Alchemist", "Paulo Coelho", false);
+            libraryService.deleteBook("1234");
+            assertTrue(libraryService.books.isEmpty());
+        }catch(Exception e)
+        {
+            throw new RuntimeException("Exception thrown");
+        }
     }
 
 
